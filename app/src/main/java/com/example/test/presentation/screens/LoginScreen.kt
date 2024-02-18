@@ -1,4 +1,4 @@
-package com.example.test.screens
+package com.example.test.presentation.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,16 +39,20 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import arrow.core.Either
 import com.example.test.R
+import com.example.test.domain.model.model.LoginResponse
+import com.example.test.domain.model.model.NetworkError
 import com.example.test.ui.theme.green
 import com.example.test.ui.theme.letterColor
-
+import com.example.test.presentation.viewmodel.LoginViewModel
 
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    loginViewModel: LoginViewModel = viewModel()
+) {
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -82,7 +87,7 @@ fun LoginScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(19.dp))
 
-        SubmitButton(username, password)
+        SubmitButton(username, password, loginViewModel)
 
     }
 }
@@ -104,7 +109,7 @@ private fun UserIdField(
 
         IconButton(
             onClick = {
-
+                //Show the userId Requirements
             }
         ) {
             Icon(
@@ -143,7 +148,9 @@ private fun PasswordField(showPassword: Boolean, password: String, onPasswordCha
         Text(text = "Κωδικός", fontSize = 16.sp, color = letterColor)
 
         IconButton(
-            onClick = { /*TODO*/ }
+            onClick = {
+                //Show the password Requirements
+            }
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_info_24),
@@ -158,7 +165,6 @@ private fun PasswordField(showPassword: Boolean, password: String, onPasswordCha
             ),
             onClick = {
                 showPassword1 = !showPassword1
-
             }) {
 
             if (showPassword1) {
@@ -177,7 +183,6 @@ private fun PasswordField(showPassword: Boolean, password: String, onPasswordCha
         singleLine = true,
         visualTransformation = if (showPassword1) {
             VisualTransformation.None
-
         } else {
             PasswordVisualTransformation()
         },
@@ -195,8 +200,9 @@ private fun PasswordField(showPassword: Boolean, password: String, onPasswordCha
 
 
 @Composable
-private fun SubmitButton(username: String, password: String) {
+private fun SubmitButton(username: String, password: String, loginViewModel: LoginViewModel) {
     val mContext = LocalContext.current
+    val loginResult by loginViewModel.loginResult.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -209,12 +215,21 @@ private fun SubmitButton(username: String, password: String) {
             onClick = {
                 val isValid = CheckCredentials(username.trim(), password.trim())
 
-                if (!isValid) {
-                    Toast.makeText(mContext, "Invalid UserId or Password", Toast.LENGTH_LONG).show()
-                } else
-                    Toast.makeText(mContext, "Valid UserId or Password", Toast.LENGTH_LONG).show()
+                if (!isValid) { // Show the Wrong credentials popup
+                    Toast.makeText(
+                        mContext,
+                        "Invalid UserId or Password",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else{ // Make Connection Attempt
+                    Toast.makeText(
+                        mContext,
+                        "Valid UserId and Password",
+                        Toast.LENGTH_LONG
+                    ).show()
 
-
+                    loginViewModel.userLogin(username,password)
+                }
             },
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = green
@@ -223,32 +238,44 @@ private fun SubmitButton(username: String, password: String) {
             modifier = Modifier.fillMaxWidth()
 
         ) {
-
-            Text("Σύνδεση") // Set the text for the button
+            Text("Σύνδεση")
         }
+    }
 
+    loginResult?.let {
 
+        when(it) {
+            is Either.Left -> Toast.makeText(
+                mContext,
+                "Login failed: ${(it as Either.Left<NetworkError>).value.error}",
+                Toast.LENGTH_LONG
+            ).show()
+
+            is Either.Right -> Toast.makeText(
+                mContext,
+                "Login successfull: ${(it as Either.Right<LoginResponse>).value.access_token}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }
 
 
 fun CheckCredentials(username: String, password: String) : Boolean {
-
     val userIdRegex = Regex("^[A-Z]{2}\\d{4}$")
     val passwordRegex = Regex("^(?=.*[A-Z].*[A-Z])(?=.*[!@#\$%^&*()])(?=.*\\d.*\\d)(?=.*[a-z].*[a-z].*[a-z]).{8,}$")
 
-
-
     val usernameValid = username.matches(userIdRegex)
     val passwordValid = password.matches(passwordRegex)
+
     return usernameValid && passwordValid
 }
 
 @Preview
 @Composable
 fun PreviewLoginScreen() {
-    val navController = rememberNavController()
-    LoginScreen(navController)
+    //val navController = rememberNavController()
+    LoginScreen()
 }
 
 
