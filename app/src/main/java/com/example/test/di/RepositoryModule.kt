@@ -1,7 +1,7 @@
 package com.example.test.di
 
 import com.example.test.book.data.repository.RepositoryImpl
-import com.example.test.domain.model.repository.Repository
+import com.example.test.book.domain.model.repository.Repository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.example.test.domain.model.model
+package com.example.test.book.domain.model.model
 
 import com.google.gson.annotations.SerializedName
 
