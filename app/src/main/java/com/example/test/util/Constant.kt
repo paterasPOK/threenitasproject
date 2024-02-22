@@ -16,4 +16,5 @@ object Constant {
     const val ALERT_DIALOG_TITLE = "Λανθασμένα στοιχεία"
     const val ALERT_DIALOG_TEXT = "Εχετε υποβάλλει λάθος στοιχέια"
     const val ALERT_DIALOG_BTN_TEXT = "Επιστροφή"
+    const val BOOK_IMG_URL = "https://img.freepik.com/free-photo/red-hardcover-book-front-cover_1101-833.jpg?w=740&t=st=1708554681~exp=1708555281~hmac=c86f4b715c05b0ffd13eb400fcd92d8428c97a3f5b23788f19a802118649a9e5"
 }

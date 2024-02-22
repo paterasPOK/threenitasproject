@@ -7,9 +7,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.test.ui.theme.bgColor
+import com.example.test.ui.theme.dimens
 import com.example.test.ui.theme.letterColor
 
 
@@ -20,7 +20,7 @@ fun CredentialsInfo(onDismiss: () -> Unit, infoText: String) {
             shape = MaterialTheme.shapes.medium,
             color = bgColor
         ) {
-            Column(modifier = Modifier.padding(all = 16.dp)) {
+            Column(modifier = Modifier.padding(all = MaterialTheme.dimens.small2)) {
                 Text(
                     text = infoText,
                     color = letterColor

@@ -8,12 +8,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.test.R
 
 
-@Preview
 @Composable
 fun MyNavigationBar(
     navController: NavController
@@ -56,8 +54,8 @@ fun createBottomNavigationItems(): List<BottomNavigationItem> {
         ),
         BottomNavigationItem(
             title = "Play",
-            selectedIcon = R.drawable.btn_play,
-            unselectedIcon = R.drawable.btn_play
+            selectedIcon = R.drawable.baseline_play_circle_24,
+            unselectedIcon = R.drawable.baseline_play_circle_24,
         ),
         BottomNavigationItem(
             title = "Link",
