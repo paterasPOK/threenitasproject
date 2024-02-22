@@ -37,8 +37,12 @@ fun CredentialsAlertDialog(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = ALERT_DIALOG_TITLE, color = letterColor, fontSize = 18.sp)
-                    Text(text = ALERT_DIALOG_TEXT, color = letterColor,fontSize = 16.sp)
+                    Text(text = ALERT_DIALOG_TITLE,
+                        style = MaterialTheme.typography
+                            .bodyLarge.copy(letterColor) )
+                    Text(text = ALERT_DIALOG_TEXT,
+                        style = MaterialTheme.typography.
+                        bodyMedium.copy(letterColor))
 
                 }
             },
